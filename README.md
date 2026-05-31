@@ -61,6 +61,8 @@ Monthly revenue
 Customer segments
 ```
 
+It can also infer safe sort intent. For example, `Which region generated the least revenue?` keeps the same approved analysis tool but changes the SQL ordering from `ORDER BY revenue DESC` to `ORDER BY revenue ASC`.
+
 ## Mem0 Memory
 
 The agent stores long-term user preferences and previous analysis context in Mem0:
