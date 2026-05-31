@@ -1,0 +1,6 @@
+streamlit>=1.36
+pandas>=2.2
+matplotlib>=3.8
+requests>=2.32
+mem0ai>=0.1.20
+python-dotenv>=1.0
