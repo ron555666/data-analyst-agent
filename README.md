@@ -2,7 +2,7 @@
 
 This project is a capstone prototype for **#6 Data Analyst Agent** using three required components:
 
-1. **Tools**: the agent uses function-style tools to query data, call an external exchange-rate API, convert revenue, summarize results, and draw charts.
+1. **Tools**: the agent uses OpenAI to route natural-language questions to approved function-style tools, then queries data, calls an external exchange-rate API, converts revenue, summarizes results, and draws charts.
 2. **Memory**: the app uses Mem0 for persistent cross-session memory when `OPENAI_API_KEY` is set, with `memory.json` as a local fallback for demo reliability.
 3. **Security / Governance**: the SQL layer only accepts read-only `SELECT` queries, blocks dangerous keywords, opens SQLite in read-only mode, restricts external API calls to an allowlisted host, and writes audit events for tool calls and blocked attempts.
 
@@ -27,7 +27,7 @@ Do not hard-code API keys in this repository.
 
 1. Run `python create_db.py` to create `sales_data.db`.
 2. Start the app with `streamlit run app.py`.
-3. Pick an analysis tool such as `Revenue by region`.
+3. Ask a natural-language question such as `Which region generated the most revenue?`.
 4. Pick a preferred currency in the sidebar, such as `CAD` or `CNY`.
 5. Run the query and show the table, chart, summary, and tool call trace.
 6. Change the chart or currency preference in the sidebar to demonstrate memory.
@@ -38,7 +38,7 @@ Do not hard-code API keys in this repository.
 
 | Capstone Component | Where it appears |
 | --- | --- |
-| Tools | `run_query`, `fetch_exchange_rate`, `add_converted_revenue`, `summarize`, `plot_result` in `app.py` |
+| Tools | `route_question_with_llm`, `run_query`, `fetch_exchange_rate`, `add_converted_revenue`, `summarize`, `plot_result` in `app.py` |
 | Memory | Mem0 via `get_mem0_memory`, `add_mem0_memory`, `search_mem0_memories`; `memory.json` fallback; preferred chart and preferred currency |
 | Security / Governance | `validate_sql`, blocked SQL keywords, SQLite read-only connection, `validate_external_api_url`, API host allowlist, `audit_event`, `audit_events.jsonl` |
 
@@ -51,6 +51,15 @@ https://api.frankfurter.dev/v2/rates?base=USD&quotes=CAD
 ```
 
 This supports the Tools requirement because the agent performs a function-style external API call after querying local sales data.
+
+The LLM never executes arbitrary SQL. It only routes the natural-language question to one approved tool from the allowlist:
+
+```text
+Revenue by region
+Top products
+Monthly revenue
+Customer segments
+```
 
 ## Mem0 Memory
 
