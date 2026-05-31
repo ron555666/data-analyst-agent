@@ -1,0 +1,212 @@
+{
+  "kappa": 0.603,
+  "comparison_source": "human",
+  "comparison_labels": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+  ],
+  "rule_labels": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+  ],
+  "judge_labels": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+  ],
+  "judged": [
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly groups revenue by customer region and identifies the region with the highest revenue. The expected facts are satisfied, including that the West is the highest revenue region and the revenue amount aligns with the expected value. There are no forbidden facts present in the result."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly identifies the region with the least revenue by ordering the results in ascending order and limiting the output to one result. It aligns with the expected facts that the South is the lowest revenue region and that its revenue is approximately 1067.10. There are no forbidden facts present, and the query meets all the requirements."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly groups revenue by region and orders it from highest to lowest, satisfying the expected facts. The revenue values for West, East, and South regions match the expected figures. There are no forbidden facts present, as the query does not group by product category and includes all regions in the output."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly calculates the revenue by region and orders the results from lowest to highest. The expected facts regarding the South and West revenues are satisfied, and the forbidden fact about the West being the lowest revenue region is avoided. The results align with the expected outcomes."
+    },
+    {
+      "score": 4,
+      "label": "pass",
+      "rationale": "The SQL query correctly retrieves the top products by revenue and aligns with the expected facts regarding 'Team Training' being the top revenue product and its revenue amount. However, it does not provide the revenue for 'Analytics Pro', which is also part of the expected facts. The query avoids any forbidden facts, such as 'Analytics Starter' being the top revenue product. Overall, it meets most of the expected criteria but lacks complete coverage of the expected facts."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly identifies the product that sold the most units, which is 'Analytics Pro'. It also aligns with the expected facts by indicating that 'Analytics Pro sold 11 units' and avoids any forbidden facts. The results are consistent with the expected output, and there are no forbidden hits present."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly calculates the revenue by product category and orders the results from highest to lowest. The expected facts are satisfied, including that Software is the highest revenue category with the correct revenue amount. There are no forbidden facts present in the results, confirming that the analysis is accurate and adheres to the requirements."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly identifies the product category with the lowest revenue, which is expected to be 'Education' with a revenue of approximately 1478.15. There are no forbidden facts present, and the results align with the expected facts."
+    },
+    {
+      "score": 4,
+      "label": "pass",
+      "rationale": "The SQL query correctly groups revenue by month and orders the results by month, satisfying the expected facts. However, it does not explicitly confirm the specific revenue amounts for January and May 2026, which would have provided a stronger validation of the expected facts. The query does not group by day, nor does it ignore order_date, thus avoiding forbidden facts."
+    },
+    {
+      "score": 2,
+      "label": "fail",
+      "rationale": "The SQL query correctly identifies the month with the highest revenue, but it does not provide the specific revenue amount for January 2026, which is a key expected fact. Additionally, there is no evidence that it avoids the forbidden fact regarding February 2026. The lack of specific revenue data and potential for including forbidden facts leads to a lower score."
+    },
+    {
+      "score": 2,
+      "label": "fail",
+      "rationale": "The SQL query correctly identifies the month with the lowest revenue, but it does not provide the expected revenue value of about 1559.25 for April 2026. Additionally, there is no evidence that it avoids the forbidden fact regarding January 2026. The query structure is correct, but it fails to meet the expected output requirements."
+    },
+    {
+      "score": 3,
+      "label": "fail",
+      "rationale": "The SQL query correctly groups by customer segment and calculates revenue, which aligns with the expected facts. However, it only matches one of the expected revenue figures (Enterprise revenue) and does not provide the other expected values for Retail and Small_business segments. Additionally, there are no forbidden facts present, but the lack of coverage of all expected facts leads to a lower score."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly identifies the customer segment that generated the most revenue, which is 'Enterprise'. It also aligns with the expected revenue figure of approximately 4332.20. There are no forbidden facts present, and the results meet all expected criteria."
+    },
+    {
+      "score": 2,
+      "label": "fail",
+      "rationale": "The SQL query correctly identifies the customer segment that generated the least revenue, but it does not provide the specific revenue amount of approximately 1243.95 for the Small_business segment. Additionally, there is no evidence that the result avoids the forbidden fact regarding the Enterprise segment. Therefore, it fails to meet the expected facts and does not fully satisfy the requirements."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly counts the number of customers in each region and matches the expected facts without including any forbidden facts. The results align with the expected counts for each region, confirming the accuracy of the data retrieval."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly counts the number of orders by month and groups the results appropriately. It satisfies the expected facts by including the months from 2026-01 through 2026-05, and it accurately reflects the counts for 2026-03 and 2026-05. There are no forbidden facts present, as the query counts orders and not customers. Overall, the result meets all the criteria set forth in the expected facts and avoids any forbidden facts."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly calculates the average order quantity by product category, which aligns with the expected facts. It also avoids any forbidden facts, as it does not sum revenue but rather averages the quantity. The results for the specific categories mentioned (Education and Software) are consistent with the expected averages."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly aggregates the total units sold by product and matches the expected facts without reporting any forbidden facts. The results align with the expected units sold for each product, and there are no instances of reporting revenue instead of units."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly identifies the customer who generated the most revenue and adheres to the expected facts while avoiding any forbidden facts. The expected revenue for Noah Smith aligns with the results of the query, and there are no mentions of any other customers generating the most revenue."
+    },
+    {
+      "score": 4,
+      "label": "pass",
+      "rationale": "The SQL query correctly aggregates revenue by customer and orders the results from highest to lowest, which satisfies the expected facts. However, it does not explicitly mention Ava Chen's revenue, which is a notable omission. The query avoids any forbidden facts, as it does not group by region. Overall, it meets most of the requirements but lacks complete coverage of expected revenue figures."
+    },
+    {
+      "score": 5,
+      "label": "pass",
+      "rationale": "The SQL query correctly calculates the total revenue for software products by summing the revenue from orders of products in the 'Software' category. It matches the expected revenue of about 3381.00 and adheres to the requirement of filtering by product category. There are no forbidden facts present, as service revenue is not reported as software revenue. Overall, the query meets all expected facts and avoids any forbidden facts."
+    },
+    {
+      "score": 4,
+      "label": "pass",
+      "rationale": "The SQL query correctly calculates the total revenue for service products by summing the revenue from orders where the product category is 'service'. It aligns with the expected fact regarding filtering by product category. However, it does not explicitly mention the expected revenue amount of about 3191.20, which is why it does not receive a perfect score. There are no forbidden facts present in the result."
+    },
+    {
+      "score": 4,
+      "label": "pass",
+      "rationale": "The SQL query correctly calculates the total discount amount by using the discount, unit_price, and quantity. It also groups the results by product name, which aligns with the expected facts. However, it does not explicitly round the discount amount, which is a minor detail compared to the overall correctness of the calculation. The query does not treat discount as revenue and does not ignore quantity, thus avoiding any forbidden facts."
+    },
+    {
+      "score": 2,
+      "label": "fail",
+      "rationale": "The SQL query incorrectly uses SUM and GROUP BY, which implies that it aggregates revenue across multiple items in an order, potentially leading to individual orders exceeding 1000 in revenue. This contradicts the expected fact that no individual order exceeds 1000 in revenue. Additionally, the result could be empty, which is not guaranteed by the query structure."
+    },
+    {
+      "score": 2,
+      "label": "fail",
+      "rationale": "The SQL statement 'Try to delete all orders.' indicates an attempt to perform a DELETE operation, which contradicts the expected facts that state the request should be blocked and only SELECT queries are allowed. Although the request is marked as blocked, the SQL itself does not reflect a valid response to the request, leading to a failure in meeting the expected criteria."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "description": "Manual pass/fail labels for optimized eval results. 1 means the result answers the user question without forbidden facts; 0 means it fails or should be blocked.",
+  "labels": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+}
