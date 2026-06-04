@@ -1,4 +1,5 @@
 .env
+.DS_Store
 memory.json
 sales_data.db
 .venv/
