@@ -1,0 +1,56 @@
+[
+  {
+    "id": "table_customers",
+    "type": "table",
+    "keywords": ["customer", "customers", "name", "region", "segment", "enterprise", "retail", "small_business", "midwest", "west", "east", "south"],
+    "content": "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments."
+  },
+  {
+    "id": "table_products",
+    "type": "table",
+    "keywords": ["product", "products", "item", "items", "category", "software", "service", "education", "unit_price", "price"],
+    "content": "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices."
+  },
+  {
+    "id": "table_orders",
+    "type": "table",
+    "keywords": ["order", "orders", "month", "monthly", "date", "trend", "quantity", "units", "discount"],
+    "content": "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys."
+  },
+  {
+    "id": "metric_revenue",
+    "type": "metric",
+    "keywords": ["revenue", "sales", "generated", "top", "highest", "lowest", "least", "most", "total"],
+    "content": "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display."
+  },
+  {
+    "id": "metric_units_sold",
+    "type": "metric",
+    "keywords": ["units", "sold", "quantity", "most units", "total units"],
+    "content": "Units sold formula: SUM(orders.quantity). Use this for questions about product volume or order quantity."
+  },
+  {
+    "id": "metric_discount_amount",
+    "type": "metric",
+    "keywords": ["discount", "discounts", "discount amount", "promotion"],
+    "content": "Discount amount formula: SUM(orders.quantity * products.unit_price * orders.discount)."
+  },
+  {
+    "id": "join_orders_customers",
+    "type": "join",
+    "keywords": ["customer", "customers", "region", "segment", "name"],
+    "content": "Join orders to customers with orders.customer_id = customers.customer_id."
+  },
+  {
+    "id": "join_orders_products",
+    "type": "join",
+    "keywords": ["product", "products", "category", "unit_price", "revenue", "units", "discount"],
+    "content": "Join orders to products with orders.product_id = products.product_id."
+  },
+  {
+    "id": "time_month",
+    "type": "time",
+    "keywords": ["month", "monthly", "trend", "date", "over time"],
+    "content": "Monthly grouping rule: use substr(orders.order_date, 1, 7) AS month and GROUP BY month."
+  }
+]

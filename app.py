@@ -13,11 +13,6 @@ import streamlit as st
 from dotenv import load_dotenv
 from openai import OpenAI
 
-try:
-    from mem0 import Memory as Mem0Memory
-except ImportError:
-    Mem0Memory = None
-
 load_dotenv()
 
 
@@ -25,7 +20,7 @@ BASE_DIR = Path(__file__).parent
 DB_PATH = BASE_DIR / "sales_data.db"
 MEMORY_PATH = BASE_DIR / "memory.json"
 AUDIT_LOG_PATH = BASE_DIR / "audit_events.jsonl"
-MEMORY_USER_ID = "data_analyst_demo_user"
+SCHEMA_DOCS_PATH = BASE_DIR / "schema_docs.json"
 DEFAULT_BASE_CURRENCY = "USD"
 SUPPORTED_CURRENCIES = ["USD", "CAD", "CNY", "EUR", "GBP", "JPY"]
 ALLOWED_API_HOSTS = {"api.frankfurter.dev"}
@@ -143,14 +138,57 @@ def save_memory(memory: dict) -> None:
     MEMORY_PATH.write_text(json.dumps(memory, indent=2), encoding="utf-8")
 
 
+def load_schema_docs() -> list[dict]:
+    if not SCHEMA_DOCS_PATH.exists():
+        return []
+    return json.loads(SCHEMA_DOCS_PATH.read_text(encoding="utf-8"))
+
+
+def retrieve_schema_context(question: str, limit: int = 6) -> str:
+    docs = load_schema_docs()
+    if not docs:
+        return SCHEMA_CONTEXT
+
+    question_text = question.lower()
+    question_tokens = set(re.findall(r"[a-z_]+", question_text))
+    scored_docs = []
+    for doc in docs:
+        keywords = [keyword.lower() for keyword in doc.get("keywords", [])]
+        keyword_score = sum(2 for keyword in keywords if keyword in question_text)
+        content_tokens = set(re.findall(r"[a-z_]+", doc.get("content", "").lower()))
+        token_score = len(question_tokens.intersection(content_tokens))
+        score = keyword_score + token_score
+        if doc.get("type") in {"table", "join"}:
+            score += 1
+        if score:
+            scored_docs.append((score, doc))
+
+    if not scored_docs:
+        scored_docs = [(1, doc) for doc in docs if doc.get("type") in {"table", "join"}]
+
+    selected_docs = [
+        doc for _, doc in sorted(scored_docs, key=lambda item: (-item[0], item[1].get("id", "")))[:limit]
+    ]
+    context = "\n".join(f"- {doc['content']}" for doc in selected_docs)
+    audit_event(
+        "tool_call",
+        "schema_retriever",
+        "success",
+        {"question": question, "retrieved_doc_ids": [doc.get("id") for doc in selected_docs]},
+    )
+    return f"Retrieved schema context:\n{context}"
+
+
 def generate_sql_from_question(question: str) -> dict:
+    schema_context = retrieve_schema_context(question)
     client = get_openai_client()
     if client is None:
         route = route_question_with_rules(question)
         return {
             "sql": sql_for_question(route, infer_sort_order(question)),
-            "explanation": "OpenAI was unavailable, so the app used approved-tool fallback SQL.",
+            "explanation": "OpenAI was unavailable, so the app used approved-tool fallback SQL after schema retrieval.",
             "source": "fallback",
+            "schema_context": schema_context,
         }
 
     response = client.chat.completions.create(
@@ -163,7 +201,7 @@ def generate_sql_from_question(question: str) -> dict:
                     "Generate exactly one read-only SELECT query. "
                     "Use only the provided schema. Do not use INSERT, UPDATE, DELETE, DROP, ALTER, PRAGMA, or multiple statements. "
                     "Prefer clear aliases and include ORDER BY/LIMIT when the question asks for top, most, least, or lowest. "
-                    f"\n\n{SCHEMA_CONTEXT}\n\n"
+                    f"\n\n{schema_context}\n\n"
                     "Return only JSON with keys: sql, explanation."
                 ),
             },
@@ -178,9 +216,19 @@ def generate_sql_from_question(question: str) -> dict:
         "tool_call",
         "text_to_sql_generator",
         "success",
-        {"question": question, "sql": sql, "explanation": payload.get("explanation", "")},
+        {
+            "question": question,
+            "sql": sql,
+            "explanation": payload.get("explanation", ""),
+            "schema_context": schema_context,
+        },
     )
-    return {"sql": sql, "explanation": payload.get("explanation", ""), "source": "openai"}
+    return {
+        "sql": sql,
+        "explanation": payload.get("explanation", ""),
+        "source": "openai",
+        "schema_context": schema_context,
+    }
 
 
 def repair_sql(question: str, bad_sql: str, error: str) -> dict:
@@ -196,7 +244,7 @@ def repair_sql(question: str, bad_sql: str, error: str) -> dict:
                 "content": (
                     "Repair a SQLite SELECT query for the provided schema. "
                     "Return exactly one safe read-only SELECT query. Do not use multiple statements. "
-                    f"\n\n{SCHEMA_CONTEXT}\n\n"
+                    f"\n\n{retrieve_schema_context(question)}\n\n"
                     "Return only JSON with keys: sql, explanation."
                 ),
             },
@@ -396,99 +444,6 @@ def sql_for_question(tool_name: str, sort_order: str = "desc") -> str:
 @st.cache_data(show_spinner=False)
 def route_question(question: str) -> dict:
     return route_question_with_llm(question)
-
-
-@st.cache_resource(show_spinner=False)
-def get_mem0_memory():
-    if Mem0Memory is None or not os.getenv("OPENAI_API_KEY"):
-        return None
-
-    config = {
-        "llm": {
-            "provider": "openai",
-            "config": {
-                "model": "gpt-4o-mini",
-                "temperature": 0.1,
-                "max_tokens": 1000,
-            },
-        },
-        "embedder": {
-            "provider": "openai",
-            "config": {
-                "model": "text-embedding-3-small",
-                "embedding_dims": 1536,
-            },
-        },
-        "vector_store": {
-            "provider": "qdrant",
-            "config": {
-                "collection_name": "data_analyst_agent_memories",
-                "path": str(BASE_DIR / ".mem0_qdrant"),
-                "embedding_model_dims": 1536,
-                "on_disk": True,
-            },
-        },
-        "history_db_path": str(BASE_DIR / ".mem0_history.db"),
-    }
-    return Mem0Memory.from_config(config)
-
-
-def mem0_status() -> str:
-    if Mem0Memory is None:
-        return "Mem0 unavailable: `mem0ai` is not installed."
-    if not os.getenv("OPENAI_API_KEY"):
-        return "Mem0 unavailable: set `OPENAI_API_KEY` first."
-    return "Mem0 enabled with local JSON fallback."
-
-
-def add_mem0_memory(content: str) -> bool:
-    mem0 = get_mem0_memory()
-    if mem0 is None:
-        audit_event(
-            "tool_call",
-            "mem0_memory",
-            "fallback",
-            {"reason": "Mem0 unavailable; using local JSON fallback."},
-        )
-        return False
-
-    messages = [
-        {"role": "user", "content": content},
-        {"role": "assistant", "content": "I will remember this for future analysis sessions."},
-    ]
-    mem0.add(messages, user_id=MEMORY_USER_ID)
-    audit_event("tool_call", "mem0_memory", "success", {"user_id": MEMORY_USER_ID})
-    return True
-
-
-def search_mem0_memories(query: str) -> list[str]:
-    mem0 = get_mem0_memory()
-    if mem0 is None:
-        return []
-
-    try:
-        raw_results = mem0.search(query, filters={"user_id": MEMORY_USER_ID})
-    except TypeError:
-        raw_results = mem0.search(query, user_id=MEMORY_USER_ID)
-
-    if isinstance(raw_results, dict):
-        raw_results = raw_results.get("results", [])
-
-    memories = []
-    for item in raw_results[:5]:
-        if isinstance(item, dict):
-            memories.append(str(item.get("memory") or item.get("text") or item))
-        else:
-            memories.append(str(item))
-    return memories
-
-
-def remember_analysis_context(memory: dict, question: str) -> bool:
-    content = (
-        f"User prefers {memory['preferred_currency']} currency and "
-        f"{memory['chart_type']} charts. Last data analysis request: {question}."
-    )
-    return add_mem0_memory(content)
 
 
 def normalize_sql(sql: str) -> str:
@@ -715,9 +670,8 @@ def main() -> None:
         save_memory(memory)
 
     with st.sidebar:
-        st.caption("Capstone components: Tools, Memory, and Security")
-        st.header("Memory")
-        st.caption(mem0_status())
+        st.caption("Capstone components: Tools, RAG(schema), and Security")
+        st.header("Preferences")
         chart_type = st.radio(
             "Preferred chart",
             ["bar", "line"],
@@ -730,11 +684,6 @@ def main() -> None:
         if memory.get("last_question"):
             st.write("Last question")
             st.code(memory["last_question"])
-        memories = search_mem0_memories("What are the user's data analysis preferences?")
-        if memories:
-            with st.expander("Mem0 retrieved memories"):
-                for item in memories:
-                    st.write(item)
 
         st.header("Security")
         st.write("Only read-only SELECT queries are accepted.")
@@ -817,7 +766,6 @@ def main() -> None:
             memory["last_question"] = question
             memory["analyses_run"] = memory.get("analyses_run", 0) + 1
             save_memory(memory)
-            mem0_saved = remember_analysis_context(memory, question)
 
             st.subheader("Answer")
             st.success(summarize(result))
@@ -836,7 +784,7 @@ def main() -> None:
                             f"Tool 2: fetch_exchange_rate(base='{DEFAULT_BASE_CURRENCY}', target='{st.session_state['preferred_currency']}')",
                             f"Exchange rate: 1 {DEFAULT_BASE_CURRENCY} = {exchange_rate:.4f} {st.session_state['preferred_currency']}",
                             f"Tool 3: add_converted_revenue(target_currency='{st.session_state['preferred_currency']}')",
-                            f"Memory: {'saved to Mem0' if mem0_saved else 'saved to local JSON fallback'}",
+                            "Preferences: saved locally to memory.json",
                         ]
                     )
                 )

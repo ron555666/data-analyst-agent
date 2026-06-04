@@ -6,6 +6,4 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .streamlit/
-.mem0_qdrant/
-.mem0_history.db
 audit_events.jsonl
