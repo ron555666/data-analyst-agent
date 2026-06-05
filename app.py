@@ -25,6 +25,14 @@ DEFAULT_BASE_CURRENCY = "USD"
 SUPPORTED_CURRENCIES = ["USD", "CAD", "CNY", "EUR", "GBP", "JPY"]
 ALLOWED_API_HOSTS = {"api.frankfurter.dev"}
 DEFAULT_USER_QUESTION = "Which region generated the most revenue?"
+APPROVED_ROUTER_QUESTIONS = [
+    "Which region generated the most revenue?",
+    "Which region generated the least revenue?",
+    "What are the top products by revenue?",
+    "Show monthly revenue trends.",
+    "Which customer segment generated the most revenue?",
+    "Which customer segment generated the least revenue?",
+]
 SCHEMA_CONTEXT = """
 Tables:
 customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT)
@@ -696,18 +704,33 @@ def main() -> None:
             else:
                 st.write("No audit events yet.")
 
-    user_question = st.text_input("Ask a business question", value=st.session_state["generated_question"])
     agent_mode = st.radio(
         "Agent mode",
         ["Text-to-SQL", "Approved tool router"],
         horizontal=True,
     )
+    if agent_mode == "Text-to-SQL":
+        user_question = st.text_input("Ask a business question", value=st.session_state["generated_question"])
+    else:
+        user_question = st.selectbox(
+            "Ask a business question",
+            APPROVED_ROUTER_QUESTIONS,
+            index=APPROVED_ROUTER_QUESTIONS.index(st.session_state["generated_question"])
+            if st.session_state["generated_question"] in APPROVED_ROUTER_QUESTIONS
+            else 0,
+        )
     generate_clicked = st.button("Generate", type="secondary")
     if generate_clicked and agent_mode == "Approved tool router":
         st.session_state["generated_question"] = user_question
         st.session_state["generated_route"] = route_question(user_question)
 
-    manual_mode = st.checkbox("Choose analysis tool manually", disabled=agent_mode == "Text-to-SQL")
+    router_mode = "Auto route"
+    if agent_mode == "Approved tool router":
+        router_mode = st.radio(
+            "Router behavior",
+            ["Auto route", "Choose manually"],
+            horizontal=True,
+        )
 
     if agent_mode == "Text-to-SQL":
         if generate_clicked:
@@ -723,7 +746,7 @@ def main() -> None:
         route_reason = st.session_state["text_to_sql_payload"]["explanation"]
         generated_sql = st.session_state["text_to_sql_payload"]["sql"]
         st.info("OpenAI generated a SELECT query from your natural-language question.")
-    elif manual_mode:
+    elif router_mode == "Choose manually":
         question = st.selectbox("Choose an analysis tool", list(SUGGESTED_QUESTIONS))
         sort_order = st.radio("Sort revenue", ["desc", "asc"], horizontal=True)
         route_reason = "Manual tool selection."
