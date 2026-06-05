@@ -616,6 +616,94 @@ def summarize(df: pd.DataFrame) -> str:
     return f"Returned {len(df)} rows. Highest {metric}: {label} ({top_row[metric]:,.2f}). Total {metric}: {total:,.2f}."
 
 
+def summarize_locally(question: str, sql: str, df: pd.DataFrame) -> tuple[str, bool]:
+    if df.empty:
+        return "No rows matched this analysis.", True
+
+    numeric_cols = df.select_dtypes(include="number").columns.tolist()
+    if not numeric_cols:
+        return f"Returned {len(df)} rows. Review the table for categorical patterns.", True
+
+    metric = numeric_cols[-1]
+    question_lower = question.lower()
+    normalized_sql = re.sub(r"\s+", " ", sql.lower())
+    wants_lowest = any(keyword in question_lower for keyword in SORT_ASC_KEYWORDS)
+    wants_highest = any(keyword in question_lower for keyword in SORT_DESC_KEYWORDS)
+    ordered_asc = f"order by {metric.lower()} asc" in normalized_sql or "order by revenue asc" in normalized_sql
+    ordered_desc = f"order by {metric.lower()} desc" in normalized_sql or "order by revenue desc" in normalized_sql
+
+    label_cols = [col for col in df.columns if col != metric]
+    total = df[metric].sum()
+
+    if wants_lowest or ordered_asc:
+        row = df.sort_values(metric, ascending=True).iloc[0]
+        label = " / ".join(str(row[col]) for col in label_cols[:2])
+        return (
+            f"Returned {len(df)} rows. Lowest {metric}: {label} ({row[metric]:,.2f}). "
+            f"Total {metric} across returned rows: {total:,.2f}.",
+            True,
+        )
+
+    if wants_highest or ordered_desc:
+        row = df.sort_values(metric, ascending=False).iloc[0]
+        label = " / ".join(str(row[col]) for col in label_cols[:2])
+        return (
+            f"Returned {len(df)} rows. Highest {metric}: {label} ({row[metric]:,.2f}). "
+            f"Total {metric} across returned rows: {total:,.2f}.",
+            True,
+        )
+
+    obvious_terms = ["revenue", "sales", "month", "monthly"]
+    if any(term in question_lower for term in obvious_terms):
+        return summarize(df), True
+
+    return summarize(df), False
+
+
+def summarize_with_openai(question: str, sql: str, df: pd.DataFrame) -> str:
+    client = get_openai_client()
+    if client is None:
+        raise RuntimeError("OPENAI_API_KEY is not configured.")
+
+    preview = df.head(10).to_dict(orient="records")
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        temperature=0,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are a careful data analyst. Summarize SQL query results for business users. "
+                    "Use only the provided query result; do not invent facts."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"User question:\n{question}\n\n"
+                    f"SQL:\n{sql}\n\n"
+                    f"Query result preview as JSON:\n{json.dumps(preview, ensure_ascii=False)}\n\n"
+                    "Write a concise answer in 1-2 sentences. Mention the key metric and value. "
+                    "If the user asks for lowest/smallest/least, highlight the lowest result. "
+                    "If the result is empty, say no matching rows were found."
+                ),
+            },
+        ],
+    )
+    return response.choices[0].message.content.strip()
+
+
+def summarize_answer(question: str, sql: str, df: pd.DataFrame) -> str:
+    local_summary, confident = summarize_locally(question, sql, df)
+    if confident:
+        return local_summary
+
+    try:
+        return summarize_with_openai(question, sql, df)
+    except Exception:
+        return local_summary
+
+
 def plot_result(df: pd.DataFrame, chart_type: str) -> None:
     numeric_cols = df.select_dtypes(include="number").columns.tolist()
     if df.empty or not numeric_cols or len(df.columns) < 2:
@@ -791,7 +879,7 @@ def main() -> None:
             save_memory(memory)
 
             st.subheader("Answer")
-            st.success(summarize(result))
+            st.success(summarize_answer(user_question, sql, result))
             with st.expander("Tool call trace", expanded=True):
                 st.code(
                     "\n".join(
