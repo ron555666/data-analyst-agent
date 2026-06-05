@@ -9,7 +9,7 @@
     {
       "id": "case_001",
       "user_input": "Which region generated the most revenue?",
-      "response": "SQL: SELECT customers.region,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY total_revenue DESC \nLIMIT 1\nSQL execution result:\nregion,total_revenue\nWest,2651.05",
+      "response": "SQL: SELECT customers.region,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY total_revenue DESC \nLIMIT 1\nSQL execution result:\nregion,total_revenue\nWest,2651.05",
       "retrieved_contexts": [
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
@@ -17,7 +17,7 @@
         "Join orders to products with orders.product_id = products.product_id.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
-        "Generated SQL:\nSELECT customers.region,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY total_revenue DESC \nLIMIT 1",
+        "Generated SQL:\nSELECT customers.region,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY total_revenue DESC \nLIMIT 1",
         "SQL execution result:\nregion,total_revenue\nWest,2651.05"
       ],
       "reference_contexts": [
@@ -29,7 +29,7 @@
     {
       "id": "case_002",
       "user_input": "Which region generated the least revenue?",
-      "response": "SQL: SELECT customers.region,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY total_revenue ASC \nLIMIT 1\nSQL execution result:\nregion,total_revenue\nSouth,1067.1",
+      "response": "SQL: SELECT customers.region,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY total_revenue ASC \nLIMIT 1\nSQL execution result:\nregion,total_revenue\nSouth,1067.1",
       "retrieved_contexts": [
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
@@ -37,7 +37,7 @@
         "Join orders to products with orders.product_id = products.product_id.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
-        "Generated SQL:\nSELECT customers.region,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY total_revenue ASC \nLIMIT 1",
+        "Generated SQL:\nSELECT customers.region,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY total_revenue ASC \nLIMIT 1",
         "SQL execution result:\nregion,total_revenue\nSouth,1067.1"
       ],
       "reference_contexts": [
@@ -49,7 +49,7 @@
     {
       "id": "case_003",
       "user_input": "Show revenue by region from highest to lowest.",
-      "response": "SQL: SELECT customers.region,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY revenue DESC\nSQL execution result:\nregion,revenue\nWest,2651.05\nEast,2587.4\nMidwest,1744.8000000000002\nSouth,1067.1",
+      "response": "SQL: SELECT customers.region,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY revenue DESC\nSQL execution result:\nregion,revenue\nWest,2651.05\nEast,2587.4\nMidwest,1744.8\nSouth,1067.1",
       "retrieved_contexts": [
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
@@ -57,8 +57,8 @@
         "Join orders to products with orders.product_id = products.product_id.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
-        "Generated SQL:\nSELECT customers.region,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY revenue DESC",
-        "SQL execution result:\nregion,revenue\nWest,2651.05\nEast,2587.4\nMidwest,1744.8000000000002\nSouth,1067.1"
+        "Generated SQL:\nSELECT customers.region,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY revenue DESC",
+        "SQL execution result:\nregion,revenue\nWest,2651.05\nEast,2587.4\nMidwest,1744.8\nSouth,1067.1"
       ],
       "reference_contexts": [
         "Reference SQL:\nSELECT c.region, ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue FROM orders o JOIN customers c ON o.customer_id = c.customer_id JOIN products p ON o.product_id = p.product_id GROUP BY c.region ORDER BY revenue DESC",
@@ -69,7 +69,7 @@
     {
       "id": "case_004",
       "user_input": "Show revenue by region from lowest to highest.",
-      "response": "SQL: SELECT customers.region,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY revenue ASC\nSQL execution result:\nregion,revenue\nSouth,1067.1\nMidwest,1744.8000000000002\nEast,2587.4\nWest,2651.05",
+      "response": "SQL: SELECT customers.region,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY revenue ASC\nSQL execution result:\nregion,revenue\nSouth,1067.1\nMidwest,1744.8\nEast,2587.4\nWest,2651.05",
       "retrieved_contexts": [
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
@@ -77,8 +77,8 @@
         "Join orders to products with orders.product_id = products.product_id.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
-        "Generated SQL:\nSELECT customers.region,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY revenue ASC",
-        "SQL execution result:\nregion,revenue\nSouth,1067.1\nMidwest,1744.8000000000002\nEast,2587.4\nWest,2651.05"
+        "Generated SQL:\nSELECT customers.region,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.region \nORDER BY revenue ASC",
+        "SQL execution result:\nregion,revenue\nSouth,1067.1\nMidwest,1744.8\nEast,2587.4\nWest,2651.05"
       ],
       "reference_contexts": [
         "Reference SQL:\nSELECT c.region, ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue FROM orders o JOIN customers c ON o.customer_id = c.customer_id JOIN products p ON o.product_id = p.product_id GROUP BY c.region ORDER BY revenue ASC",
@@ -89,7 +89,7 @@
     {
       "id": "case_005",
       "user_input": "What are the top products by revenue?",
-      "response": "SQL: SELECT products.product_name,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_name \nORDER BY revenue DESC \nLIMIT 10\nSQL execution result:\nproduct_name,revenue\nAnalytics Pro,2490.0\nData Cleaning Pack,1794.0\nTeam Training,1478.15\nDashboard Setup,1397.2\nAnalytics Starter,891.0",
+      "response": "SQL: SELECT products.product_name,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_name \nORDER BY revenue DESC \nLIMIT 10\nSQL execution result:\nproduct_name,revenue\nAnalytics Pro,2490.0\nData Cleaning Pack,1794.0\nTeam Training,1478.15\nDashboard Setup,1397.2\nAnalytics Starter,891.0",
       "retrieved_contexts": [
         "Join orders to products with orders.product_id = products.product_id.",
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
@@ -97,7 +97,7 @@
         "Join orders to customers with orders.customer_id = customers.customer_id.",
         "Discount amount formula: SUM(orders.quantity * products.unit_price * orders.discount).",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
-        "Generated SQL:\nSELECT products.product_name,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_name \nORDER BY revenue DESC \nLIMIT 10",
+        "Generated SQL:\nSELECT products.product_name,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_name \nORDER BY revenue DESC \nLIMIT 10",
         "SQL execution result:\nproduct_name,revenue\nAnalytics Pro,2490.0\nData Cleaning Pack,1794.0\nTeam Training,1478.15\nDashboard Setup,1397.2\nAnalytics Starter,891.0"
       ],
       "reference_contexts": [
@@ -109,7 +109,7 @@
     {
       "id": "case_006",
       "user_input": "Which product sold the most units?",
-      "response": "SQL: SELECT products.product_name,\n       SUM(orders.quantity) AS total_units_sold \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_name \nORDER BY total_units_sold DESC \nLIMIT 1\nSQL execution result:\nproduct_name,total_units_sold\nAnalytics Pro,11",
+      "response": "SQL: SELECT products.product_name,\n       SUM(orders.quantity) AS total_units_sold \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_id \nORDER BY total_units_sold DESC \nLIMIT 1\nSQL execution result:\nproduct_name,total_units_sold\nAnalytics Pro,11",
       "retrieved_contexts": [
         "Units sold formula: SUM(orders.quantity). Use this for questions about product volume or order quantity.",
         "Join orders to products with orders.product_id = products.product_id.",
@@ -117,7 +117,7 @@
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
-        "Generated SQL:\nSELECT products.product_name,\n       SUM(orders.quantity) AS total_units_sold \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_name \nORDER BY total_units_sold DESC \nLIMIT 1",
+        "Generated SQL:\nSELECT products.product_name,\n       SUM(orders.quantity) AS total_units_sold \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_id \nORDER BY total_units_sold DESC \nLIMIT 1",
         "SQL execution result:\nproduct_name,total_units_sold\nAnalytics Pro,11"
       ],
       "reference_contexts": [
@@ -129,7 +129,7 @@
     {
       "id": "case_007",
       "user_input": "Show revenue by product category from highest to lowest.",
-      "response": "SQL: SELECT products.category,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.category \nORDER BY revenue DESC\nSQL execution result:\ncategory,revenue\nSoftware,3381.0\nService,3191.2\nEducation,1478.15",
+      "response": "SQL: SELECT products.category,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.category \nORDER BY revenue DESC\nSQL execution result:\ncategory,revenue\nSoftware,3381.0\nService,3191.2\nEducation,1478.15",
       "retrieved_contexts": [
         "Join orders to products with orders.product_id = products.product_id.",
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
@@ -137,7 +137,7 @@
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
         "Units sold formula: SUM(orders.quantity). Use this for questions about product volume or order quantity.",
-        "Generated SQL:\nSELECT products.category,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.category \nORDER BY revenue DESC",
+        "Generated SQL:\nSELECT products.category,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.category \nORDER BY revenue DESC",
         "SQL execution result:\ncategory,revenue\nSoftware,3381.0\nService,3191.2\nEducation,1478.15"
       ],
       "reference_contexts": [
@@ -149,7 +149,7 @@
     {
       "id": "case_008",
       "user_input": "Which product category has the lowest revenue?",
-      "response": "SQL: SELECT products.category,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.category \nORDER BY total_revenue ASC \nLIMIT 1\nSQL execution result:\ncategory,total_revenue\nEducation,1478.15",
+      "response": "SQL: SELECT products.category,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.category \nORDER BY total_revenue ASC \nLIMIT 1\nSQL execution result:\ncategory,total_revenue\nEducation,1478.15",
       "retrieved_contexts": [
         "Join orders to products with orders.product_id = products.product_id.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
@@ -157,7 +157,7 @@
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
         "Units sold formula: SUM(orders.quantity). Use this for questions about product volume or order quantity.",
-        "Generated SQL:\nSELECT products.category,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.category \nORDER BY total_revenue ASC \nLIMIT 1",
+        "Generated SQL:\nSELECT products.category,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.category \nORDER BY total_revenue ASC \nLIMIT 1",
         "SQL execution result:\ncategory,total_revenue\nEducation,1478.15"
       ],
       "reference_contexts": [
@@ -169,7 +169,7 @@
     {
       "id": "case_009",
       "user_input": "Show monthly revenue trends.",
-      "response": "SQL: SELECT strftime('%Y-%m',\n       order_date) AS month,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY month\nSQL execution result:\nmonth,revenue\n2026-01,1489.2\n2026-02,1345.6\n2026-03,1864.3000000000002\n2026-04,1657.25\n2026-05,1694.0",
+      "response": "SQL: SELECT substr(orders.order_date, 1, 7) AS month,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY month\nSQL execution result:\nmonth,revenue\n2026-01,1489.2\n2026-02,1345.6\n2026-03,1864.3\n2026-04,1657.25\n2026-05,1694.0",
       "retrieved_contexts": [
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "Monthly grouping rule: use substr(orders.order_date, 1, 7) AS month and GROUP BY month.",
@@ -177,8 +177,8 @@
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
-        "Generated SQL:\nSELECT strftime('%Y-%m',\n       order_date) AS month,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY month",
-        "SQL execution result:\nmonth,revenue\n2026-01,1489.2\n2026-02,1345.6\n2026-03,1864.3000000000002\n2026-04,1657.25\n2026-05,1694.0"
+        "Generated SQL:\nSELECT substr(orders.order_date, 1, 7) AS month,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY month",
+        "SQL execution result:\nmonth,revenue\n2026-01,1489.2\n2026-02,1345.6\n2026-03,1864.3\n2026-04,1657.25\n2026-05,1694.0"
       ],
       "reference_contexts": [
         "Reference SQL:\nSELECT substr(o.order_date, 1, 7) AS month, ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue FROM orders o JOIN products p ON o.product_id = p.product_id GROUP BY month ORDER BY month",
@@ -189,7 +189,7 @@
     {
       "id": "case_010",
       "user_input": "Which month had the highest revenue?",
-      "response": "SQL: SELECT strftime('%Y-%m',\n       order_date) AS month,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY revenue DESC \nLIMIT 1\nSQL execution result:\nmonth,revenue\n2026-03,1864.3000000000002",
+      "response": "SQL: SELECT substr(orders.order_date, 1, 7) AS month,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY revenue DESC \nLIMIT 1\nSQL execution result:\nmonth,revenue\n2026-03,1864.3",
       "retrieved_contexts": [
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "Join orders to products with orders.product_id = products.product_id.",
@@ -197,8 +197,8 @@
         "Monthly grouping rule: use substr(orders.order_date, 1, 7) AS month and GROUP BY month.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
-        "Generated SQL:\nSELECT strftime('%Y-%m',\n       order_date) AS month,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY revenue DESC \nLIMIT 1",
-        "SQL execution result:\nmonth,revenue\n2026-03,1864.3000000000002"
+        "Generated SQL:\nSELECT substr(orders.order_date, 1, 7) AS month,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY revenue DESC \nLIMIT 1",
+        "SQL execution result:\nmonth,revenue\n2026-03,1864.3"
       ],
       "reference_contexts": [
         "Reference SQL:\nSELECT substr(o.order_date, 1, 7) AS month, ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue FROM orders o JOIN products p ON o.product_id = p.product_id GROUP BY month ORDER BY revenue DESC LIMIT 1",
@@ -209,7 +209,7 @@
     {
       "id": "case_011",
       "user_input": "Which month had the lowest revenue?",
-      "response": "SQL: SELECT strftime('%Y-%m',\n       order_date) AS month,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY revenue ASC \nLIMIT 1\nSQL execution result:\nmonth,revenue\n2026-02,1345.6",
+      "response": "SQL: SELECT substr(orders.order_date, 1, 7) AS month,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nJOIN customers ON orders.customer_id = customers.customer_id \nGROUP BY month \nORDER BY revenue ASC \nLIMIT 1\nSQL execution result:\nmonth,revenue\n2026-02,1345.6",
       "retrieved_contexts": [
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "Join orders to products with orders.product_id = products.product_id.",
@@ -217,7 +217,7 @@
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "Monthly grouping rule: use substr(orders.order_date, 1, 7) AS month and GROUP BY month.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
-        "Generated SQL:\nSELECT strftime('%Y-%m',\n       order_date) AS month,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY month \nORDER BY revenue ASC \nLIMIT 1",
+        "Generated SQL:\nSELECT substr(orders.order_date, 1, 7) AS month,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nJOIN customers ON orders.customer_id = customers.customer_id \nGROUP BY month \nORDER BY revenue ASC \nLIMIT 1",
         "SQL execution result:\nmonth,revenue\n2026-02,1345.6"
       ],
       "reference_contexts": [
@@ -229,7 +229,7 @@
     {
       "id": "case_012",
       "user_input": "Show revenue by customer segment.",
-      "response": "SQL: SELECT customers.segment,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment\nSQL execution result:\nsegment,revenue\nenterprise,4332.2\nretail,2460.1\nsmall_business,1258.05",
+      "response": "SQL: SELECT customers.segment,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM customers \nJOIN orders ON customers.customer_id = orders.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment\nSQL execution result:\nsegment,revenue\nenterprise,4332.2\nretail,2460.1\nsmall_business,1258.05",
       "retrieved_contexts": [
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
@@ -237,7 +237,7 @@
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
-        "Generated SQL:\nSELECT customers.segment,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment",
+        "Generated SQL:\nSELECT customers.segment,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM customers \nJOIN orders ON customers.customer_id = orders.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment",
         "SQL execution result:\nsegment,revenue\nenterprise,4332.2\nretail,2460.1\nsmall_business,1258.05"
       ],
       "reference_contexts": [
@@ -249,7 +249,7 @@
     {
       "id": "case_013",
       "user_input": "Which customer segment generated the most revenue?",
-      "response": "SQL: SELECT customers.segment,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment \nORDER BY total_revenue DESC \nLIMIT 1\nSQL execution result:\nsegment,total_revenue\nenterprise,4332.2",
+      "response": "SQL: SELECT customers.segment,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment \nORDER BY total_revenue DESC \nLIMIT 1\nSQL execution result:\nsegment,total_revenue\nenterprise,4332.2",
       "retrieved_contexts": [
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
@@ -257,7 +257,7 @@
         "Join orders to products with orders.product_id = products.product_id.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
-        "Generated SQL:\nSELECT customers.segment,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment \nORDER BY total_revenue DESC \nLIMIT 1",
+        "Generated SQL:\nSELECT customers.segment,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment \nORDER BY total_revenue DESC \nLIMIT 1",
         "SQL execution result:\nsegment,total_revenue\nenterprise,4332.2"
       ],
       "reference_contexts": [
@@ -269,7 +269,7 @@
     {
       "id": "case_014",
       "user_input": "Which customer segment generated the least revenue?",
-      "response": "SQL: SELECT customers.segment,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment \nORDER BY total_revenue ASC \nLIMIT 1\nSQL execution result:\nsegment,total_revenue\nsmall_business,1258.05",
+      "response": "SQL: SELECT customers.segment,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM customers \nJOIN orders ON customers.customer_id = orders.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment \nORDER BY total_revenue ASC \nLIMIT 1\nSQL execution result:\nsegment,total_revenue\nsmall_business,1258.05",
       "retrieved_contexts": [
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
@@ -277,7 +277,7 @@
         "Join orders to products with orders.product_id = products.product_id.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
-        "Generated SQL:\nSELECT customers.segment,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment \nORDER BY total_revenue ASC \nLIMIT 1",
+        "Generated SQL:\nSELECT customers.segment,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM customers \nJOIN orders ON customers.customer_id = orders.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.segment \nORDER BY total_revenue ASC \nLIMIT 1",
         "SQL execution result:\nsegment,total_revenue\nsmall_business,1258.05"
       ],
       "reference_contexts": [
@@ -308,7 +308,7 @@
     {
       "id": "case_016",
       "user_input": "How many orders are there by month?",
-      "response": "SQL: SELECT strftime('%Y-%m',\n       order_date) AS month,\n       COUNT(order_id) AS order_count \nFROM orders \nGROUP BY month \nORDER BY month\nSQL execution result:\nmonth,order_count\n2026-01,3\n2026-02,2\n2026-03,3\n2026-04,2\n2026-05,2",
+      "response": "SQL: SELECT substr(orders.order_date, 1, 7) AS month,\n       COUNT(orders.order_id) AS total_orders \nFROM orders \nGROUP BY month \nORDER BY month\nSQL execution result:\nmonth,total_orders\n2026-01,3\n2026-02,2\n2026-03,3\n2026-04,2\n2026-05,2",
       "retrieved_contexts": [
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "Monthly grouping rule: use substr(orders.order_date, 1, 7) AS month and GROUP BY month.",
@@ -316,8 +316,8 @@
         "Join orders to products with orders.product_id = products.product_id.",
         "Discount amount formula: SUM(orders.quantity * products.unit_price * orders.discount).",
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
-        "Generated SQL:\nSELECT strftime('%Y-%m',\n       order_date) AS month,\n       COUNT(order_id) AS order_count \nFROM orders \nGROUP BY month \nORDER BY month",
-        "SQL execution result:\nmonth,order_count\n2026-01,3\n2026-02,2\n2026-03,3\n2026-04,2\n2026-05,2"
+        "Generated SQL:\nSELECT substr(orders.order_date, 1, 7) AS month,\n       COUNT(orders.order_id) AS total_orders \nFROM orders \nGROUP BY month \nORDER BY month",
+        "SQL execution result:\nmonth,total_orders\n2026-01,3\n2026-02,2\n2026-03,3\n2026-04,2\n2026-05,2"
       ],
       "reference_contexts": [
         "Reference SQL:\nSELECT substr(order_date, 1, 7) AS month, COUNT(*) AS orders FROM orders GROUP BY month ORDER BY month",
@@ -348,7 +348,7 @@
     {
       "id": "case_018",
       "user_input": "Show total units sold by product.",
-      "response": "SQL: SELECT products.product_name,\n       SUM(orders.quantity) AS total_units_sold \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_name\nSQL execution result:\nproduct_name,total_units_sold\nAnalytics Pro,11\nAnalytics Starter,9\nDashboard Setup,3\nData Cleaning Pack,7\nTeam Training,2",
+      "response": "SQL: SELECT p.product_name,\n       SUM(o.quantity) AS total_units_sold \nFROM products p \nJOIN orders o ON p.product_id = o.product_id \nGROUP BY p.product_name \nORDER BY total_units_sold DESC\nSQL execution result:\nproduct_name,total_units_sold\nAnalytics Pro,11\nAnalytics Starter,9\nData Cleaning Pack,7\nDashboard Setup,3\nTeam Training,2",
       "retrieved_contexts": [
         "Units sold formula: SUM(orders.quantity). Use this for questions about product volume or order quantity.",
         "Join orders to products with orders.product_id = products.product_id.",
@@ -356,8 +356,8 @@
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
-        "Generated SQL:\nSELECT products.product_name,\n       SUM(orders.quantity) AS total_units_sold \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY products.product_name",
-        "SQL execution result:\nproduct_name,total_units_sold\nAnalytics Pro,11\nAnalytics Starter,9\nDashboard Setup,3\nData Cleaning Pack,7\nTeam Training,2"
+        "Generated SQL:\nSELECT p.product_name,\n       SUM(o.quantity) AS total_units_sold \nFROM products p \nJOIN orders o ON p.product_id = o.product_id \nGROUP BY p.product_name \nORDER BY total_units_sold DESC",
+        "SQL execution result:\nproduct_name,total_units_sold\nAnalytics Pro,11\nAnalytics Starter,9\nData Cleaning Pack,7\nDashboard Setup,3\nTeam Training,2"
       ],
       "reference_contexts": [
         "Reference SQL:\nSELECT p.product_name, SUM(o.quantity) AS units_sold FROM orders o JOIN products p ON o.product_id = p.product_id GROUP BY p.product_id ORDER BY units_sold DESC",
@@ -368,7 +368,7 @@
     {
       "id": "case_019",
       "user_input": "Which customer generated the most revenue?",
-      "response": "SQL: SELECT customers.name,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.customer_id \nORDER BY total_revenue DESC \nLIMIT 1\nSQL execution result:\nname,total_revenue\nNoah Smith,2587.4",
+      "response": "SQL: SELECT customers.name,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.customer_id \nORDER BY total_revenue DESC \nLIMIT 1\nSQL execution result:\nname,total_revenue\nNoah Smith,2587.4",
       "retrieved_contexts": [
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
@@ -376,7 +376,7 @@
         "Join orders to products with orders.product_id = products.product_id.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
-        "Generated SQL:\nSELECT customers.name,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.customer_id \nORDER BY total_revenue DESC \nLIMIT 1",
+        "Generated SQL:\nSELECT customers.name,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.customer_id \nORDER BY total_revenue DESC \nLIMIT 1",
         "SQL execution result:\nname,total_revenue\nNoah Smith,2587.4"
       ],
       "reference_contexts": [
@@ -388,7 +388,7 @@
     {
       "id": "case_020",
       "user_input": "Show revenue by customer from highest to lowest.",
-      "response": "SQL: SELECT customers.name AS customer_name,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.customer_id \nORDER BY revenue DESC\nSQL execution result:\ncustomer_name,revenue\nNoah Smith,2587.4\nSophia Garcia,1744.8000000000002\nAva Chen,1393.0\nLiam Patel,1258.05\nMia Johnson,1067.1",
+      "response": "SQL: SELECT customers.name AS customer_name,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.customer_id \nORDER BY revenue DESC\nSQL execution result:\ncustomer_name,revenue\nNoah Smith,2587.4\nSophia Garcia,1744.8\nAva Chen,1393.0\nLiam Patel,1258.05\nMia Johnson,1067.1",
       "retrieved_contexts": [
         "Revenue formula: SUM(orders.quantity * products.unit_price * (1 - orders.discount)). Use ROUND(..., 2) for display.",
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
@@ -396,8 +396,8 @@
         "Join orders to products with orders.product_id = products.product_id.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
-        "Generated SQL:\nSELECT customers.name AS customer_name,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.customer_id \nORDER BY revenue DESC",
-        "SQL execution result:\ncustomer_name,revenue\nNoah Smith,2587.4\nSophia Garcia,1744.8000000000002\nAva Chen,1393.0\nLiam Patel,1258.05\nMia Johnson,1067.1"
+        "Generated SQL:\nSELECT customers.name AS customer_name,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN customers ON orders.customer_id = customers.customer_id \nJOIN products ON orders.product_id = products.product_id \nGROUP BY customers.customer_id \nORDER BY revenue DESC",
+        "SQL execution result:\ncustomer_name,revenue\nNoah Smith,2587.4\nSophia Garcia,1744.8\nAva Chen,1393.0\nLiam Patel,1258.05\nMia Johnson,1067.1"
       ],
       "reference_contexts": [
         "Reference SQL:\nSELECT c.name, ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue FROM orders o JOIN customers c ON o.customer_id = c.customer_id JOIN products p ON o.product_id = p.product_id GROUP BY c.customer_id ORDER BY revenue DESC",
@@ -408,7 +408,7 @@
     {
       "id": "case_021",
       "user_input": "What is the total revenue for software products?",
-      "response": "SQL: SELECT SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nWHERE products.category = 'Software'\nSQL execution result:\ntotal_revenue\n3381.0",
+      "response": "SQL: SELECT ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nWHERE products.category = 'software'\nSQL execution result:\ntotal_revenue\nNone",
       "retrieved_contexts": [
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
         "Join orders to products with orders.product_id = products.product_id.",
@@ -416,8 +416,8 @@
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
-        "Generated SQL:\nSELECT SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nWHERE products.category = 'Software'",
-        "SQL execution result:\ntotal_revenue\n3381.0"
+        "Generated SQL:\nSELECT ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nWHERE products.category = 'software'",
+        "SQL execution result:\ntotal_revenue\nNone"
       ],
       "reference_contexts": [
         "Reference SQL:\nSELECT p.category, ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue FROM orders o JOIN products p ON o.product_id = p.product_id WHERE p.category = 'Software' GROUP BY p.category",
@@ -428,7 +428,7 @@
     {
       "id": "case_022",
       "user_input": "What is the total revenue for service products?",
-      "response": "SQL: SELECT SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nWHERE products.category = 'service'\nSQL execution result:\ntotal_revenue\nNone",
+      "response": "SQL: SELECT ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nWHERE products.category = 'service'\nSQL execution result:\ntotal_revenue\nNone",
       "retrieved_contexts": [
         "products(product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, unit_price REAL). Use this table for product names, product categories, and prices.",
         "Join orders to products with orders.product_id = products.product_id.",
@@ -436,7 +436,7 @@
         "customers(customer_id INTEGER PRIMARY KEY, name TEXT, region TEXT, segment TEXT). Use this table for customer names, regions, and customer segments.",
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "Join orders to customers with orders.customer_id = customers.customer_id.",
-        "Generated SQL:\nSELECT SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nWHERE products.category = 'service'",
+        "Generated SQL:\nSELECT ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS total_revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nWHERE products.category = 'service'",
         "SQL execution result:\ntotal_revenue\nNone"
       ],
       "reference_contexts": [
@@ -468,7 +468,7 @@
     {
       "id": "case_024",
       "user_input": "List orders with revenue greater than 1000.",
-      "response": "SQL: SELECT orders.order_id,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY orders.order_id \nHAVING revenue > 1000\nSQL execution result:\norder_id,revenue\n12,1196.0",
+      "response": "SQL: SELECT orders.order_id,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY orders.order_id \nHAVING revenue > 1000\nSQL execution result:\norder_id,revenue\n12,1196.0",
       "retrieved_contexts": [
         "orders(order_id INTEGER PRIMARY KEY, order_date TEXT, customer_id INTEGER, product_id INTEGER, quantity INTEGER, discount REAL). Use this table for order dates, quantities, discounts, and foreign keys.",
         "Join orders to products with orders.product_id = products.product_id.",
@@ -476,7 +476,7 @@
         "Join orders to customers with orders.customer_id = customers.customer_id.",
         "Discount amount formula: SUM(orders.quantity * products.unit_price * orders.discount).",
         "Units sold formula: SUM(orders.quantity). Use this for questions about product volume or order quantity.",
-        "Generated SQL:\nSELECT orders.order_id,\n       SUM(orders.quantity * products.unit_price * (1 - orders.discount)) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY orders.order_id \nHAVING revenue > 1000",
+        "Generated SQL:\nSELECT orders.order_id,\n       ROUND(SUM(orders.quantity * products.unit_price * (1 - orders.discount)), 2) AS revenue \nFROM orders \nJOIN products ON orders.product_id = products.product_id \nGROUP BY orders.order_id \nHAVING revenue > 1000",
         "SQL execution result:\norder_id,revenue\n12,1196.0"
       ],
       "reference_contexts": [

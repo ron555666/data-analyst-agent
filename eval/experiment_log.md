@@ -23,12 +23,12 @@ Current saved deterministic run:
 
 | Mode | Pass rate | Avg expected coverage | Avg forbidden rate |
 | --- | ---: | ---: | ---: |
-| Baseline approved-tool router | 0.48 | 0.537 | 0.08 |
-| Optimized text-to-SQL + self-check | 0.64 | 0.643 | 0.00 |
+| Baseline approved-tool router | 0.60 | 0.663 | 0.08 |
+| Optimized text-to-SQL + self-check | 0.76 | 0.803 | 0.00 |
 
 Current RAGAS semantic metric: `NonLLMContextRecall = 0.96` over 25 optimized cases.
 
-Current LLM-judge agreement against manual labels: `kappa = 0.603`.
+Current LLM-judge agreement against manual labels: `kappa = 0.621`.
 
 RAGAS semantic metric: `eval/ragas_eval.py` runs `NonLLMContextRecall` on retrieved analysis evidence against reference SQL evidence for each golden case.
 

@@ -1,8 +1,8 @@
 {
   "summary": {
     "cases": 25,
-    "pass_rate": 0.48,
-    "avg_expected_coverage": 0.537,
+    "pass_rate": 0.6,
+    "avg_expected_coverage": 0.663,
     "avg_forbidden_rate": 0.08
   },
   "results": [
@@ -137,9 +137,9 @@
       "id": "case_005",
       "input": "What are the top products by revenue?",
       "expected_facts": [
-        "Team Training is the top revenue product",
-        "Team Training revenue is about 1478.15",
-        "Analytics Pro revenue is about 1443.75"
+        "Analytics Pro is the top revenue product",
+        "Analytics Pro revenue is about 2490.00",
+        "Data Cleaning Pack revenue is about 1794.00"
       ],
       "forbidden_facts": [
         "Analytics Starter is the top revenue product"
@@ -154,12 +154,13 @@
       "mode": "baseline",
       "sql": "SELECT p.product_name,\n       p.category,\n       SUM(o.quantity) AS units_sold,\n       ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue \nFROM orders o \nJOIN products p ON o.product_id = p.product_id \nGROUP BY p.product_id \nORDER BY revenue DESC",
       "rows": 5,
-      "expected_coverage": 0.667,
+      "expected_coverage": 1.0,
       "forbidden_rate": 0.0,
       "passed": true,
       "expected_hits": [
-        "Team Training is the top revenue product",
-        "Team Training revenue is about 1478.15"
+        "Analytics Pro is the top revenue product",
+        "Analytics Pro revenue is about 2490.00",
+        "Data Cleaning Pack revenue is about 1794.00"
       ],
       "forbidden_hits": []
     },
@@ -259,8 +260,8 @@
       "input": "Show monthly revenue trends.",
       "expected_facts": [
         "Revenue is grouped by month",
-        "2026-01 revenue is about 2109.55",
-        "2026-05 revenue is about 1689.20"
+        "2026-01 revenue is about 1489.20",
+        "2026-05 revenue is about 1694.00"
       ],
       "forbidden_facts": [
         "The answer groups by day only",
@@ -276,18 +277,21 @@
       "mode": "baseline",
       "sql": "SELECT substr(o.order_date, 1, 7) AS month,\n       ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue \nFROM orders o \nJOIN products p ON o.product_id = p.product_id \nGROUP BY month \nORDER BY month",
       "rows": 5,
-      "expected_coverage": 0.0,
+      "expected_coverage": 0.667,
       "forbidden_rate": 0.0,
-      "passed": false,
-      "expected_hits": [],
+      "passed": true,
+      "expected_hits": [
+        "2026-01 revenue is about 1489.20",
+        "2026-05 revenue is about 1694.00"
+      ],
       "forbidden_hits": []
     },
     {
       "id": "case_010",
       "input": "Which month had the highest revenue?",
       "expected_facts": [
-        "2026-01 has the highest monthly revenue",
-        "2026-01 revenue is about 2109.55"
+        "2026-03 has the highest monthly revenue",
+        "2026-03 revenue is about 1864.30"
       ],
       "forbidden_facts": [
         "2026-02 is the highest revenue month"
@@ -302,10 +306,12 @@
       "mode": "baseline",
       "sql": "SELECT substr(o.order_date, 1, 7) AS month,\n       ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue \nFROM orders o \nJOIN products p ON o.product_id = p.product_id \nGROUP BY month \nORDER BY month",
       "rows": 5,
-      "expected_coverage": 0.0,
+      "expected_coverage": 0.5,
       "forbidden_rate": 1.0,
       "passed": false,
-      "expected_hits": [],
+      "expected_hits": [
+        "2026-03 revenue is about 1864.30"
+      ],
       "forbidden_hits": [
         "2026-02 is the highest revenue month"
       ]
@@ -314,11 +320,11 @@
       "id": "case_011",
       "input": "Which month had the lowest revenue?",
       "expected_facts": [
-        "2026-04 has the lowest monthly revenue",
-        "2026-04 revenue is about 1559.25"
+        "2026-02 has the lowest monthly revenue",
+        "2026-02 revenue is about 1345.60"
       ],
       "forbidden_facts": [
-        "2026-01 is the lowest revenue month"
+        "2026-03 is the lowest revenue month"
       ],
       "tags": [
         "text_to_sql",
@@ -330,12 +336,14 @@
       "mode": "baseline",
       "sql": "SELECT substr(o.order_date, 1, 7) AS month,\n       ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue \nFROM orders o \nJOIN products p ON o.product_id = p.product_id \nGROUP BY month \nORDER BY month",
       "rows": 5,
-      "expected_coverage": 0.0,
+      "expected_coverage": 0.5,
       "forbidden_rate": 1.0,
       "passed": false,
-      "expected_hits": [],
+      "expected_hits": [
+        "2026-02 revenue is about 1345.60"
+      ],
       "forbidden_hits": [
-        "2026-01 is the lowest revenue month"
+        "2026-03 is the lowest revenue month"
       ]
     },
     {
@@ -343,8 +351,8 @@
       "input": "Show revenue by customer segment.",
       "expected_facts": [
         "Enterprise revenue is about 4332.20",
-        "Retail revenue is about 1730.40",
-        "Small_business revenue is about 1243.95"
+        "Retail revenue is about 2460.10",
+        "Small_business revenue is about 1258.05"
       ],
       "forbidden_facts": [
         "The query groups by product category instead of customer segment"
@@ -359,11 +367,13 @@
       "mode": "baseline",
       "sql": "SELECT c.segment,\n       COUNT(DISTINCT c.customer_id) AS customers,\n       ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue \nFROM orders o \nJOIN customers c ON o.customer_id = c.customer_id \nJOIN products p ON o.product_id = p.product_id \nGROUP BY c.segment \nORDER BY revenue DESC",
       "rows": 3,
-      "expected_coverage": 0.333,
+      "expected_coverage": 1.0,
       "forbidden_rate": 0.0,
-      "passed": false,
+      "passed": true,
       "expected_hits": [
-        "Enterprise revenue is about 4332.20"
+        "Enterprise revenue is about 4332.20",
+        "Retail revenue is about 2460.10",
+        "Small_business revenue is about 1258.05"
       ],
       "forbidden_hits": []
     },
@@ -401,7 +411,7 @@
       "input": "Which customer segment generated the least revenue?",
       "expected_facts": [
         "Small_business generated the least revenue",
-        "Small_business revenue is about 1243.95"
+        "Small_business revenue is about 1258.05"
       ],
       "forbidden_facts": [
         "Enterprise generated the least revenue"
@@ -416,11 +426,12 @@
       "mode": "baseline",
       "sql": "SELECT c.segment,\n       COUNT(DISTINCT c.customer_id) AS customers,\n       ROUND(SUM(o.quantity * p.unit_price * (1 - o.discount)), 2) AS revenue \nFROM orders o \nJOIN customers c ON o.customer_id = c.customer_id \nJOIN products p ON o.product_id = p.product_id \nGROUP BY c.segment \nORDER BY revenue ASC",
       "rows": 3,
-      "expected_coverage": 0.5,
+      "expected_coverage": 1.0,
       "forbidden_rate": 0.0,
-      "passed": false,
+      "passed": true,
       "expected_hits": [
-        "Small_business generated the least revenue"
+        "Small_business generated the least revenue",
+        "Small_business revenue is about 1258.05"
       ],
       "forbidden_hits": []
     },
@@ -579,7 +590,7 @@
       "input": "Show revenue by customer from highest to lowest.",
       "expected_facts": [
         "Noah Smith is highest at about 2587.40",
-        "Ava Chen revenue is about 1407.10",
+        "Ava Chen revenue is about 1393.00",
         "Mia Johnson revenue is about 1067.10"
       ],
       "forbidden_facts": [
@@ -662,8 +673,8 @@
       "input": "What is the total discount amount by product?",
       "expected_facts": [
         "The query uses discount with unit_price and quantity",
-        "Data Cleaning Pack has discount impact about 373.75",
-        "Analytics Pro has discount impact about 254.75"
+        "Data Cleaning Pack has discount impact about 299.00",
+        "Analytics Pro has discount impact about 249.00"
       ],
       "forbidden_facts": [
         "The answer treats discount as revenue",
@@ -691,9 +702,9 @@
       "id": "case_024",
       "input": "List orders with revenue greater than 1000.",
       "expected_facts": [
-        "No individual order exceeds 1000 in revenue",
-        "The query computes order-level revenue",
-        "The result can be empty"
+        "Order 12 exceeds 1000 in revenue",
+        "Order 12 revenue is about 1196.00",
+        "The query computes order-level revenue"
       ],
       "forbidden_facts": [
         "The answer includes all orders",
