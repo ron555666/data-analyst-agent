@@ -6,6 +6,36 @@ This project is a capstone prototype for **#6 Data Analyst Agent** using three a
 2. **RAG (schema)**: before text-to-SQL generation, the agent retrieves relevant table, join, and metric context from `schema_docs.json`.
 3. **Security / Governance**: the SQL layer only accepts read-only `SELECT` queries, blocks dangerous keywords, opens SQLite in read-only mode, restricts external API calls to an allowlisted host, and writes audit events for tool calls and blocked attempts.
 
+## Repository Structure
+
+```text
+.
+|-- app.py                         # Main Streamlit Data Analyst Agent
+|-- create_db.py                   # Creates the local SQLite sales database
+|-- schema_docs.json               # Schema RAG knowledge base
+|-- requirements.txt               # Python dependencies
+|-- README.md                      # Project overview, setup, demo, and eval guide
+|-- tests/
+|   `-- unit/
+|       |-- test_schema_rag.py      # Tests schema retrieval behavior
+|       |-- test_security.py        # Tests SQL validation and API allowlist behavior
+|       |-- test_text_to_sql.py     # Tests text-to-SQL pipeline behavior
+|       `-- test_tools.py           # Tests tool/helper functions
+`-- eval/
+    |-- golden.jsonl               # 25 golden evaluation test cases
+    |-- run_eval.py                # Main baseline/optimized evaluation runner
+    |-- results_baseline.json      # Saved baseline evaluation results
+    |-- results_optimized.json     # Saved optimized evaluation results
+    |-- ragas_eval.py              # Schema RAG context-recall evaluation
+    |-- ragas_results.json         # Saved RAG evaluation results
+    |-- judge.py                   # LLM judge reliability script
+    |-- human_labels.json          # Manual labels for judge comparison
+    |-- judge_results.json         # Saved judge agreement results
+    `-- experiment_log.md          # Experiment rounds, metrics, failures, and trade-offs
+```
+
+Runtime/local files such as `.env`, `.venv`, `sales_data.db`, `memory.json`, and `audit_events.jsonl` are intentionally not part of the core submitted source.
+
 ## Setup
 
 ```bash
